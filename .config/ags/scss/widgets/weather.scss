@@ -1,0 +1,158 @@
+.weather {
+  background: $background-transparent;
+  border: 1px solid rgba($foreground, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border-radius: 1.5em;
+  padding: 1.25em;
+  min-width: 340px;
+
+  .weather-city-input {
+    background: rgba($background, 0.4);
+    color: $foreground;
+    border-radius: 1em;
+    padding: 0.5em 1em;
+    border: 1px solid rgba($foreground, 0.08);
+    font-size: 0.9em;
+    transition: all 0.2s ease-in-out;
+
+    &:focus {
+      border-color: rgba($secondary, 0.5);
+      background: rgba($background, 0.6);
+    }
+  }
+
+  .weather-city-apply,
+  .weather-city-clear {
+    background: rgba($background, 0.4);
+    color: $foreground;
+    border-radius: 1em;
+    padding: 0.5em 0.8em;
+    border: 1px solid rgba($foreground, 0.08);
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: rgba($secondary, 0.2);
+      border-color: rgba($secondary, 0.4);
+      transform: scale(1.05);
+    }
+  }
+
+  .weather-heading {
+    @include module;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: $foreground;
+  }
+
+  .weather-section {
+    color: $foreground;
+    border-radius: 1.25em;
+    background: rgba($background, 0.3);
+    border: 1px solid rgba($foreground, 0.05);
+    padding: 1.25em;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: rgba($background, 0.4);
+      border-color: rgba($foreground, 0.08);
+    }
+
+    .main {
+      min-width: 160px;
+    }
+  }
+
+  .weather-subheading {
+    font-weight: bold;
+    font-size: 0.9em;
+    color: $foreground;
+    opacity: 0.9;
+  }
+
+  .weather-icon-large {
+    font-size: 5.5em;
+    color: $secondary;
+  }
+
+  .weather-temp-large {
+    font-size: 2.2em;
+    font-weight: 800;
+    color: $foreground;
+  }
+
+  .weather-description {
+    font-size: 0.95em;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  .weather-feels-like {
+    font-size: 0.8em;
+    opacity: 0.75;
+  }
+
+  .weather-date {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  .weather-detail {
+    font-size: 0.9em;
+    opacity: 0.9;
+    background: rgba($background, 0.2);
+    padding: 6px 12px;
+    border-radius: 0.75em;
+    border: 1px solid rgba($foreground, 0.03);
+
+    .icon {
+      font-size: 1.4em;
+      color: $secondary;
+    }
+    
+    &.sun-detail {
+      padding: 8px 12px;
+      .sun {
+        font-size: 1.8em;
+        color: $secondary;
+      }
+    }
+  }
+
+  .forecast-label {
+    font-size: 0.75em;
+    opacity: 0.7;
+  }
+
+  .forecast-value {
+    font-size: 0.85em;
+    font-weight: bold;
+  }
+
+  .forecast-item {
+    background: rgba($background, 0.2);
+    padding: 8px;
+    border-radius: 0.75em;
+    border: 1px solid rgba($foreground, 0.03);
+  }
+
+  .hourly-item {
+    background: rgba($background, 0.2);
+    padding: 8px 4px;
+    border-radius: 0.75em;
+    border: 1px solid rgba($foreground, 0.03);
+    
+    .hourly-icon {
+      font-size: 1.8em;
+      color: $secondary;
+    }
+    .hourly-time {
+      font-size: 0.75em;
+      opacity: 0.7;
+    }
+    .hourly-temp {
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+  }
+}

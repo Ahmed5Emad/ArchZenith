@@ -1,0 +1,274 @@
+.profile-widget {
+  padding: 10px;
+
+  .user-profile-card {
+    @include module;
+    padding: 1.5em;
+    margin-bottom: 5px;
+    border-radius: 15px;
+
+    .profile-picture {
+      border-radius: 50%;
+      background: transparent;
+      padding: 0px;
+      border: 3px solid rgba($secondary, 0.4);
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: $BOX-SHADOW;
+        border-color: $secondary;
+        transform: scale(1.02);
+      }
+
+      .image {
+        border-radius: 50%;
+      }
+    }
+
+    .user-details {
+      margin-top: 10px;
+
+      .username-edit-btn {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 5px 10px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba($foreground, 0.05);
+          transform: scale(1.02);
+          
+          .edit-icon {
+            opacity: 1;
+            color: $secondary;
+          }
+        }
+
+        .user-name {
+          font-size: 1.3em;
+          color: $foreground;
+
+          .secondary {
+            color: $secondary;
+          }
+          
+          .edit-icon {
+            font-size: 0.85em;
+            color: $grey;
+            opacity: 0.4;
+            transition: all 0.2s ease;
+            margin-left: 5px;
+          }
+        }
+      }
+      
+      .desktop-env {
+        font-size: 0.95em;
+        color: $grey;
+
+        .secondary {
+          color: $secondary;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .system-actions-grid {
+    @include module;
+    padding: 16px 10px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+
+    .sys-btn {
+      @include button;
+      font-size: 1.5em;
+      min-width: 55px;
+      min-height: 55px;
+      border-radius: 9999px;
+      transition: all 0.2s ease-in-out;
+      border: 1px solid rgba($secondary, 0.25);
+      background: rgba($secondary, 0.08);
+
+      label {
+        color: $secondary;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba($secondary, 0.3);
+        background: $secondary;
+        border-radius: 9999px;
+        
+        label {
+          color: $background;
+          text-shadow: none;
+        }
+      }
+
+      &.shutdown {
+        background: rgba(#ff5e5b, 0.08);
+        border-color: rgba(#ff5e5b, 0.25);
+        label { color: #ff5e5b; }
+        &:hover {
+          background: #ff5e5b;
+          border-color: #ff5e5b;
+          box-shadow: 0 0 10px rgba(#ff5e5b, 0.4);
+          label { color: white; }
+        }
+      }
+    }
+  }
+
+  .fastfetch-container {
+    @include module;
+    padding: 1.5em;
+    border-radius: 15px;
+    margin-bottom: 5px;
+
+    .fetch-header {
+      margin-bottom: 12px;
+      
+      .fetch-header-icon {
+        font-size: 1.3em;
+        color: $secondary;
+      }
+
+      .fetch-header-title {
+        font-size: 1.2em;
+        color: $foreground;
+      }
+    }
+
+    .fetch-body {
+      .fetch-stat-row {
+        padding: 4px 0;
+        border-bottom: 1px solid rgba($foreground, 0.03);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .fetch-icon {
+          font-size: 1.1em;
+          min-width: 24px;
+        }
+
+        // Color specific icons nicely
+        &:nth-child(1) .fetch-icon { color: #38bdf8; } // OS (Sky blue)
+        &:nth-child(2) .fetch-icon { color: #4ade80; } // OS Age (Green)
+        &:nth-child(3) .fetch-icon { color: #c084fc; } // Uptime (Purple)
+        &:nth-child(4) .fetch-icon { color: #fbbf24; } // Packages (Yellow)
+        &:nth-child(5) .fetch-icon { color: #a7f3d0; } // Shell (Mint)
+        &:nth-child(6) .fetch-icon { color: #2dd4bf; } // Memory (Teal)
+        &:nth-child(7) .fetch-icon { color: #f87171; } // CPU (Red/Coral)
+        &:nth-child(8) .fetch-icon { color: #fb7185; } // GPU (Rose)
+
+        .fetch-label {
+          font-weight: 500;
+          color: $foreground;
+          opacity: 0.9;
+        }
+
+        .fetch-value {
+          color: $secondary;
+          font-weight: 600;
+          font-size: 0.9em;
+        }
+      }
+    }
+  }
+
+  .profile-separator {
+    background-color: rgba($foreground, 0.05);
+    min-height: 1px;
+    margin: 8px 0;
+  }
+
+  .info {
+    @include module;
+    padding: 1.5em;
+    border-radius: 15px;
+
+    .config-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: $foreground;
+    }
+    
+    .config-stars {
+      font-size: 1.1em;
+      color: $secondary;
+    }
+
+    .link-button {
+      @include button;
+      padding: 6px 12px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      
+      label {
+        color: $foreground;
+      }
+      
+      &:hover {
+        background: $background-secondary;
+      }
+    }
+
+    .version-section {
+      margin-top: 8px;
+      
+      .version-status {
+        color: $secondary;
+        font-weight: 700;
+      }
+
+      .version-container {
+        .version-label {
+          font-size: 0.8em;
+          color: $secondary;
+          opacity: 0.8;
+          font-weight: 500;
+        }
+
+        .version-value {
+          @include module;
+          font-size: 0.95em;
+          font-weight: bold;
+          color: $foreground;
+          border-radius: 8px;
+          padding: 8px;
+        }
+      }
+      
+      .update-button {
+        @include button;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        background: $secondary;
+        
+        label {
+          color: $background;
+        }
+        
+        &:hover {
+          box-shadow: 0 0 8px rgba($secondary, 0.3);
+        }
+        
+        &.secondary {
+          background: rgba($secondary, 0.08);
+          label {
+            color: $secondary;
+          }
+          &:hover {
+            background: rgba($secondary, 0.15);
+          }
+        }
+      }
+    }
+  }
+}

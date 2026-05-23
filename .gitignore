@@ -1,0 +1,18 @@
+# Custom Local Scripts
+sync.sh
+
+# Local application caches
+.config/ags/cache/
+.config/ags/logs/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

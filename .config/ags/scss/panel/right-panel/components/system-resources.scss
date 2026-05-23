@@ -1,0 +1,92 @@
+.system-resources {
+  @include module;
+  padding: 1em;
+
+  .header {
+    margin-bottom: 0.6em;
+
+    .title {
+      font-weight: 700;
+      font-size: 1.05em;
+      color: $foreground;
+    }
+
+    .refresh {
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+  }
+
+  .resource-columns {
+    .resource-column {
+      // Flat and transparent by default to avoid cluttered card-in-card nesting
+      background: transparent;
+      border: none;
+      padding: 0.4em 0.6em;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+
+      // Safe, non-jumpy hover highlight
+      &:hover {
+        background: rgba($foreground, 0.03);
+      }
+
+      .column-title {
+        font-size: 1.05em;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .metric {
+        font-size: 0.9em;
+        color: rgba($foreground, 0.8);
+      }
+    }
+
+  }
+
+  .updated-at {
+    color: rgba($foreground, 0.4);
+    font-size: 0.8em;
+    font-style: italic;
+    margin-top: 0.4em;
+  }
+}
+
+popover.resource-monitor-popover {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+
+  contents {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  arrow {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  contents > * {
+    background: $background-transparent !important;
+    border: 1px solid rgba($foreground, 0.05) !important;
+    padding: 1.2em !important;
+    min-width: 420px;
+    margin-top: 8px !important; /* Visual floating gap below the bar */
+
+    .resource-columns {
+      margin-top: 0.4em;
+
+      .resource-column {
+        padding: 0.6em 0.8em;
+        min-width: 120px;
+      }
+    }
+  }
+}
+
+

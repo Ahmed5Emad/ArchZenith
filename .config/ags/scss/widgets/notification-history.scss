@@ -1,0 +1,80 @@
+.notification-history {
+  border-radius: 10px;
+  background: $background-transparent;
+  padding: 10px;
+
+  .history-header {
+    padding: 5px 8px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba($foreground, 0.08);
+
+    .history-title {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: $foreground;
+    }
+
+    .clear-all-button {
+      padding: 4px 12px;
+      font-size: 0.85em;
+      font-weight: bold;
+      border-radius: 8px;
+      background: rgba($foreground, 0.05);
+      color: $foreground;
+      border: 1px solid rgba($foreground, 0.08);
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background: rgba($red, 0.15);
+        color: mix($red, $foreground, 70%);
+        border-color: rgba($red, 0.25);
+        transform: scale(1.02);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  .notification-stack {
+    @include module;
+    background: transparent;
+    padding: 5px;
+
+    .stack-scrolled {
+      transition: min-height 0.6s ease-in-out;
+      &.expanded {
+        min-height: 300px;
+      }
+      &.collapsed {
+        min-height: 100px;
+      }
+    }
+
+    &:hover {
+      .stack-header {
+        .actions button {
+          opacity: 1;
+        }
+      }
+    }
+
+    .stack-header {
+      padding: 5px;
+      .stack-title {
+        // font-weight: bold;
+        padding-left: 5px;
+        font-size: 0.9em;
+      }
+      .actions button {
+        // padding: 0px 10px;
+        opacity: 0;
+
+        &:not(:hover) {
+          background: transparent;
+        }
+      }
+    }
+  }
+}
