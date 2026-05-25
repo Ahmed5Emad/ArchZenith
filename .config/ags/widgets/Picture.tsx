@@ -85,50 +85,47 @@ export default function Picture({
       heightRequest={height}
       widthRequest={width}
       $={(self) => {
-        // Expose a lookup helper without holding a long-lived strong reference.
-        (self as any).getPicture = () => {
-          const children = self.observe_children();
-          const count = children.get_n_items();
+        const picture = Gtk.Picture.new();
+        picture.contentFit = contentFit;
 
-          for (let i = 0; i < count; i++) {
-            const child = children.get_item(i);
+        if (className != undefined && typeof className === "string") {
+          picture.add_css_class(className);
+        }
 
-            if (child instanceof Gtk.Picture) {
-              return child;
+        const setupPicture = () => {
+          const path = resolvedPath.get ? resolvedPath.get() : resolvedPath();
+          if (path) {
+            picture.set_file(Gio.File.new_for_path(path));
+          }
+
+          if (paintable != undefined) {
+            if (typeof paintable === "object" && !("subscribe" in paintable)) {
+              picture.set_paintable(paintable);
+            } else if (typeof paintable !== "string") {
+              paintable.subscribe((p: any) => {
+                if (p) picture.set_paintable(p);
+              });
             }
           }
-
-          return undefined;
         };
+
+        setupPicture();
+
+        resolvedPath.subscribe((path: string) => {
+          if (path) {
+            picture.set_file(Gio.File.new_for_path(path));
+          } else {
+            picture.set_file(null);
+          }
+        });
+
+        (self as any).getPicture = () => picture;
+
+        if ($) $.call(undefined, picture);
+
+        self.add_overlay(picture);
       }}
     >
-      <Gtk.Picture
-        $type="overlay"
-        class={
-          className != undefined
-            ? typeof className === "string"
-              ? "image " + className
-              : className!((c) => "image " + c)
-            : "image"
-        }
-        file={resolvedPath((p) =>
-          p ? Gio.File.new_for_path(p) : null
-        )}
-        paintable={
-          paintable != undefined
-            ? typeof paintable === "object"
-              ? paintable
-              : paintable!((p) => p)
-            : undefined
-        }
-        contentFit={contentFit}
-        $={(self) => {
-          if ($) {
-            $.call(undefined, self);
-          }
-        }}
-      />
-
       <box
         $type="overlay"
         class="image-info"

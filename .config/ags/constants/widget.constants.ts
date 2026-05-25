@@ -19,6 +19,7 @@ import NotificationHistory from "../widgets/rightPanel/components/NotificationHi
 import KeyBinds from "../widgets/leftPanel/components/KeyBinds";
 import SystemResources from "../widgets/rightPanel/components/SystemResources";
 import { Gtk } from "ags/gtk4";
+import GameLauncherPanel from "../widgets/gamelauncher/GameLauncherPanel";
 
 export const barWidgetSelectors: WidgetSelector[] = [
   {
@@ -139,6 +140,12 @@ export const leftPanelWidgetSelectors: WidgetSelector[] = [
     name: "KeyBinds",
     icon: "",
     widget: () => KeyBinds(),
+    enabled: false,
+  },
+  {
+    name: "GameLauncher",
+    icon: "🎮",
+    widget: () => GameLauncherPanel(),
     enabled: false,
   },
   {

@@ -54,29 +54,29 @@
 }
 
 popover.resource-monitor-popover {
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
+  background: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
 
   contents {
-    background: transparent !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
+    background: transparent;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
   }
 
   arrow {
-    background: transparent !important;
-    border: none !important;
+    background: transparent;
+    border: none;
   }
 
   contents > * {
-    background: $background-transparent !important;
-    border: 1px solid rgba($foreground, 0.05) !important;
-    padding: 1.2em !important;
+    background: $background-transparent;
+    border: 1px solid rgba($foreground, 0.05);
+    padding: 1.2em;
     min-width: 420px;
-    margin-top: 8px !important; /* Visual floating gap below the bar */
+    margin-top: 8px; /* Visual floating gap below the bar */
 
     .resource-columns {
       margin-top: 0.4em;

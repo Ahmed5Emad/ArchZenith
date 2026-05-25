@@ -169,8 +169,32 @@ export default ({
 
   let parentWindowRef: Gtk.Window | null = null;
   let launcherContainerRef: Gtk.Box | null = null;
+  let resultsContainerRef: Gtk.Box | null = null;
 
   let entryWidget: Gtk.TextView | null = null;
+
+  function scrollToSelected() {
+    const idx = selectedIndex.get();
+    const container = resultsContainerRef;
+    if (!container) return;
+    let sw = container.get_parent();
+    while (sw && !(sw instanceof Gtk.ScrolledWindow)) {
+      sw = sw.get_parent();
+    }
+    if (!sw) return;
+    const adj = sw.get_vadjustment();
+    if (!adj) return;
+    const itemTop = idx * 75;
+    const itemBottom = itemTop + 75;
+    const viewTop = adj.get_value();
+    const viewBottom = viewTop + adj.get_page_size();
+    if (itemBottom > viewBottom || itemTop < viewTop) {
+      GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
+        adj.set_value(Math.max(0, itemTop - adj.get_page_size() / 3));
+        return GLib.SOURCE_REMOVE;
+      });
+    }
+  }
 
   let debounceTimer: any;
   let args: string[];
@@ -282,6 +306,7 @@ export default ({
           class="results"
           orientation={Gtk.Orientation.VERTICAL}
           spacing={10}
+          $={(self) => { resultsContainerRef = self; }}
         >
           <For each={results}>
             {(result, index) => (
@@ -563,6 +588,7 @@ export default ({
                 if (keyval === Gdk.KEY_Down) {
                   if (itemsCount > 0) {
                     setSelectedIndex((selectedIndex.get() + 1) % itemsCount);
+                    scrollToSelected();
                   }
                   return true;
                 }
@@ -570,8 +596,9 @@ export default ({
                 if (keyval === Gdk.KEY_Up) {
                   if (itemsCount > 0) {
                     setSelectedIndex(
-                      (selectedIndex.get() - 1 + itemsCount) % itemsCount
+                      (selectedIndex.get() - 1 + itemsCount) % itemsCount,
                     );
+                    scrollToSelected();
                   }
                   return true;
                 }

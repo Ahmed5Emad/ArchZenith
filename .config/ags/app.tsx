@@ -16,6 +16,7 @@ import NotificationPopups from "./widgets/NotificationPopups";
 import { createBinding, For, onCleanup, This } from "ags";
 import Notifd from "gi://AstalNotifd";
 import KeyStrokeVisualizer from "./widgets/KeyStrokeVisualizer";
+import GameLauncherWindow from "./widgets/gamelauncher/GameLauncherWindow";
 import { leftPanelWidgetSelectors } from "./constants/widget.constants";
 import { setGlobalSetting } from "./variables";
 import { Gtk } from "ags/gtk4";
@@ -43,6 +44,7 @@ const perMonitorDisplay = () => {
     WallpaperSwitcher,
     AlwaysOnWidget,
     KeyStrokeVisualizer,
+    GameLauncherWindow,
   ];
 
   return (
@@ -51,9 +53,14 @@ const perMonitorDisplay = () => {
         <This this={app}>
           {(() => {
             const connector = monitor.get_connector()! as unknown as string;
-            return widgets.map((Widget) =>
-              logTimeWidget(connector, createWidget(Widget, monitor)),
-            );
+            return widgets.map((Widget) => {
+              try {
+                return logTimeWidget(connector, createWidget(Widget, monitor));
+              } catch (e) {
+                console.error("[App] Failed to create widget:", Widget?.name || Widget, e);
+                return null;
+              }
+            });
           })()}
         </This>
       )}
@@ -142,6 +149,17 @@ app.start({
         prefillLauncherInput(appLauncher as any, "note ");
       }
       response("Notes widget opened.");
+      return;
+    } else if (cmd == "game-launcher") {
+      const allWindows = app.windows?.map((w: any) => w.name) || [];
+      console.log(`[GameLauncher] looking for: game-launcher-${monitor}, existing: ${JSON.stringify(allWindows)}`);
+      const gl = app.get_window(`game-launcher-${monitor}`);
+      if (gl) {
+        gl.set_visible(!gl.get_visible());
+        response("Game launcher toggled.");
+      } else {
+        response(`Game launcher window not found`);
+      }
       return;
     } else if (cmd == "reload-css") {
       try {

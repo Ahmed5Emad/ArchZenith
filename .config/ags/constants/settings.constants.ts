@@ -198,6 +198,7 @@ export const defaultSettings: Settings = {
     lock: false,
     width: 400,
     widget: leftPanelWidgetSelectors[0],
+    disabledWidgets: [],
   },
   chatBot: {
     api: chatBotApis[0],
@@ -233,6 +234,24 @@ export const defaultSettings: Settings = {
       type: "select",
       min: 0,
       max: 0,
+    },
+  },
+  gameluancher: {
+    steam: {
+      name: "Steam Games",
+      value: false,
+      type: "bool",
+      min: 0,
+      max: 1,
+      tooltip: "Include Steam games in the launcher",
+    },
+    heroic: {
+      name: "Heroic Games",
+      value: false,
+      type: "bool",
+      min: 0,
+      max: 1,
+      tooltip: "Include Heroic Games Launcher games in the launcher",
     },
   },
   wallpaperSwitcher: {

@@ -1,0 +1,76 @@
+.game-launcher {
+  min-height: 400px;
+  min-width: 500px;
+  background: $background-semi-transparent;
+  border-radius: 14px;
+
+  .game-launcher-header {
+    @include module;
+    margin: 10px;
+  }
+
+  .game-launcher-status {
+    color: $foreground-tertiary;
+    font-size: 0.9em;
+  }
+
+  > scrollable {
+    > * {
+      padding: 0 10px;
+    }
+  }
+
+    .game-launcher-item {
+      @include module;
+      background: $background-semi-transparent;
+      padding: 5px;
+      margin: 2px 0;
+
+      &.checked {
+        background: $color2;
+        color: $background;
+      }
+
+    .game-launcher-cover {
+      border-radius: 8px;
+      background: $background-secondary;
+    }
+
+    .game-launcher-runner {
+      color: $foreground-tertiary;
+      font-size: 0.8em;
+    }
+  }
+
+  .game-launcher-empty {
+    color: $foreground-tertiary;
+    font-size: 1.1em;
+  }
+}
+
+.game-launcher-panel {
+  .game-launcher-panel-header {
+    @include module;
+    margin: 5px;
+  }
+
+  .game-launcher-panel-item {
+    @include module;
+    padding: 4px;
+    margin: 2px 5px;
+
+    .game-launcher-panel-cover {
+      border-radius: 6px;
+      background: $background-secondary;
+    }
+
+    .game-launcher-panel-runner {
+      color: $foreground-tertiary;
+      font-size: 0.8em;
+    }
+  }
+
+  .game-launcher-panel-empty {
+    color: $foreground-tertiary;
+  }
+}

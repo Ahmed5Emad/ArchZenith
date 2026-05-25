@@ -12,16 +12,26 @@ import { WindowActions, Window } from "../../utils/window";
 import { leftPanelWidgetSelectors } from "../../constants/widget.constants";
 import app from "ags/gtk4/app";
 import { timeout, Timer } from "ags/time";
+import { createState, For } from "ags";
 
 function Panel() {
+  const filterWidgets = () =>
+    leftPanelWidgetSelectors.filter(
+      (w) => !globalSettings.peek().leftPanel.disabledWidgets.includes(w.name),
+    );
+
+  const [enabledWidgets, setEnabledWidgets] = createState(filterWidgets());
+
+  globalSettings.subscribe(() => setEnabledWidgets(filterWidgets()));
+
   const WidgetActions = () => (
     <box
       orientation={Gtk.Orientation.VERTICAL}
       class="widget-actions"
       spacing={10}
     >
-      {leftPanelWidgetSelectors.map((widgetSelector) => {
-        return (
+      <For each={enabledWidgets}>
+        {(widgetSelector: (typeof leftPanelWidgetSelectors)[number]) => (
           <togglebutton
             class={`${widgetSelector.name}`}
             label={widgetSelector.icon}
@@ -35,7 +45,6 @@ function Panel() {
             }}
             tooltipMarkup={`Click to open\n<b>${widgetSelector.name}</b>`}
             $={(self) => {
-              // if its the profile widget, show a custom tooltip with
               if (widgetSelector.name === "Profile") {
                 self.set_tooltip_markup(
                   "<b>View and manage your profile 👤</b>\n\nClick to open\n<b>Profile</b>",
@@ -43,8 +52,8 @@ function Panel() {
               }
             }}
           />
-        );
-      })}
+        )}
+      </For>
     </box>
   );
 
@@ -78,7 +87,7 @@ function Panel() {
   });
 
   // PRECREATE INSIDE JSX CONTEXT
-  leftPanelWidgetSelectors.forEach((selector) => {
+  enabledWidgets().forEach((selector) => {
     try {
       const widget = (
         <box hexpand vexpand>
@@ -116,7 +125,14 @@ function Panel() {
         widthRequest={globalSettings(({ leftPanel }) => leftPanel.width)}
         $={(self) => {
           const updateVisibleChild = () => {
-            showWidget(globalSettings.peek().leftPanel.widget.name);
+            const name = globalSettings.peek().leftPanel.widget.name;
+            const first = enabledWidgets()[0];
+            if (!enabledWidgets().some((w) => w.name === name) && first) {
+              setGlobalSetting("leftPanel.widget", first);
+              showWidget(first.name);
+              return;
+            }
+            showWidget(name);
           };
 
           updateVisibleChild();

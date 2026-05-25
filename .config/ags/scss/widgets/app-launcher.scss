@@ -35,13 +35,7 @@
     }
     &.checked,
     &:focus {
-      @include button-checked;
-      .argument {
-        color: $background-secondary;
-      }
-      .description {
-        color: $background-tertiary;
-      }
+      background: $color2;
     }
   }
 

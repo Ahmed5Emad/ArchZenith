@@ -662,6 +662,43 @@ export default () => {
             orientation={Gtk.Orientation.VERTICAL}
             spacing={16}
           >
+            <label label="AGS -- Left Panel Tabs" halign={Gtk.Align.START} />
+            {(() => {
+              const tabs = [
+                { name: "ChatBot", icon: "" },
+                { name: "WallpaperViewer", icon: "" },
+                { name: "MangaViewer", icon: "" },
+                { name: "GameLauncher", icon: "🎮" },
+              ];
+              return tabs.map((tab) => (
+                <box spacing={5}>
+                  <label class="category" label={`${tab.icon} ${tab.name}`} hexpand />
+                  <switch
+                    active={!globalSettings.peek().leftPanel.disabledWidgets.includes(tab.name)}
+                    onNotifyActive={(self) => {
+                      const disabled = globalSettings.peek().leftPanel.disabledWidgets;
+                      if (self.active) {
+                        setGlobalSetting(
+                          "leftPanel.disabledWidgets",
+                          disabled.filter((n: string) => n !== tab.name),
+                        );
+                      } else {
+                        setGlobalSetting(
+                          "leftPanel.disabledWidgets",
+                          [...disabled, tab.name],
+                        );
+                      }
+                    }}
+                  />
+                </box>
+              ));
+            })()}
+          </box>
+          <box
+            class={"category"}
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={16}
+          >
             <label label={"AGS -- Api Keys"} halign={Gtk.Align.START} />
             <box class={"sub-category"}>
               <Setting
@@ -735,6 +772,21 @@ export default () => {
             setting={globalSettings.peek().autoWorkspaceSwitching}
           /> */}
             <FileManagerSelector />
+          </box>
+          <box
+            class={"category"}
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={16}
+          >
+            <label label="Game Launcher" halign={Gtk.Align.START} />
+            <Setting
+              keyChanged="gameluancher.steam"
+              setting={globalSettings.peek().gameluancher.steam}
+            />
+            <Setting
+              keyChanged="gameluancher.heroic"
+              setting={globalSettings.peek().gameluancher.heroic}
+            />
           </box>
         </box>
       </scrolledwindow>

@@ -16,4 +16,7 @@ export function compileBinaries() {
   exec(
     `gcc -o ${tmpDir}/keystroke-loop-ags ${scriptsDir}/keystroke-loop-ags.c`,
   );
+  exec(
+    `gcc -o ${tmpDir}/gamelauncher-ags ${scriptsDir}/gamelauncher/gamelauncher.c -lsqlite3`,
+  );
 }

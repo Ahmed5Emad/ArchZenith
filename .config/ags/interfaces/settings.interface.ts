@@ -89,6 +89,7 @@ export interface Settings {
     width: number;
     lock: boolean;
     widget: WidgetSelector;
+    disabledWidgets: string[];
   };
   crypto: {
     favorite: {
@@ -100,6 +101,10 @@ export interface Settings {
   keyStrokeVisualizer: {
     visibility: AGSSetting;
     anchor: AGSSetting;
+  };
+  gameluancher: {
+    steam: AGSSetting;
+    heroic: AGSSetting;
   };
   wallpaperSwitcher: {
     category: string;

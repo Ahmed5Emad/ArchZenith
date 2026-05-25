@@ -50,22 +50,29 @@ const GeneralInfo = () => {
 
   const checkVersions = async () => {
     setIsCheckingVersion(true);
+
+    const gitDir = `${configDir}/.git`;
+    if (!GLib.file_test(gitDir, GLib.FileTest.EXISTS)) {
+      setCurrentVersion("Unknown");
+      setRemoteVersion("Unknown");
+      setUpdateStatus("");
+      setIsCheckingVersion(false);
+      return;
+    }
+
     try {
-      // Get current local commit
       const localHash = exec(
         `git -C ${configDir} rev-parse --short HEAD`,
       ).trim();
       setCurrentVersion(localHash);
 
-      // Fetch and get remote commit
       await execAsync(`git -C ${configDir} fetch origin master`);
       const remoteHash = await execAsync(
         `git -C ${configDir} rev-parse --short origin/master`,
       );
       setRemoteVersion(remoteHash.trim());
       setUpdateStatus("");
-    } catch (e) {
-      console.error("Failed to check versions:", e);
+    } catch {
       setCurrentVersion("Unknown");
       setRemoteVersion("Unknown");
       setUpdateStatus("");
