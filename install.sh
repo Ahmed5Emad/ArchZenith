@@ -171,7 +171,7 @@ install_section() {
 
     if [[ "$choice" =~ ^[Yy]$ ]]; then
         echo -e "\n${YELLOW}Installing Section $sec_num packages...${NC}"
-        $AUR_HELPER -S --needed --noconfirm "${pkgs[@]}"
+        $AUR_HELPER -Sy --needed --noconfirm "${pkgs[@]}"
         if [ $? -eq 0 ]; then
             print_success "Section $sec_num installed successfully!"
         else
