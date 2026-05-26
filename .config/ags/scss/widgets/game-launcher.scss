@@ -32,8 +32,9 @@
       }
 
     .game-launcher-cover {
-      border-radius: 8px;
+      border-radius: 10px;
       background: $background-secondary;
+      overflow: hidden;
     }
 
     .game-launcher-runner {
@@ -60,8 +61,9 @@
     margin: 2px 5px;
 
     .game-launcher-panel-cover {
-      border-radius: 6px;
+      border-radius: 10px;
       background: $background-secondary;
+      overflow: hidden;
     }
 
     .game-launcher-panel-runner {

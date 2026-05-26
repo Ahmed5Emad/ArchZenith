@@ -87,6 +87,7 @@ export default function Picture({
       $={(self) => {
         const picture = Gtk.Picture.new();
         picture.contentFit = contentFit;
+        picture.add_css_class("image");
 
         if (className != undefined && typeof className === "string") {
           picture.add_css_class(className);

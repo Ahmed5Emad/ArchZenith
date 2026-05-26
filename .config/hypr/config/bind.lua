@@ -36,6 +36,10 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + Space", hl.dsp.window.float({ action = "toggle" }))
 -- # pin active window
 hl.bind(mainMod .. " + CTRL + Space", hl.dsp.window.pin())
+-- # toggle split orientation (horizontal ↔ vertical)
+hl.bind(mainMod .. " + SHIFT + Q", function()
+    hl.dispatch(hl.dsp.layout("togglesplit"))
+end)
 
 -- ## Open Apps
 -- # open terminal
