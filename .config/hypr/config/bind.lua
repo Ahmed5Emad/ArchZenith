@@ -43,7 +43,7 @@ end)
 
 -- ## Open Apps
 -- # open terminal
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("kitty"))
 -- # open floating terminal
 hl.bind(mainMod .. " + CTRL + T", hl.dsp.exec_cmd("[float] " .. terminal))
 -- # open browser
@@ -156,7 +156,7 @@ hl.bind(mainMod .. " + SHIFT + C", hl.dsp.window.resize({ x = 0, y = -resizeAmou
 hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.resize({ x = 0, y = resizeAmount, relative = true }),
     { repeating = true })
 -- # expand down
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.window.resize({ x = 0, y = resizeAmount, relative = true }),
+hl.bind(mainMod .. " + SHIFT + E", hl.dsp.window.resize({ x = 0, y = resizeAmount, relative = true }),
     { repeating = true })
 
 -- # move left
@@ -175,7 +175,7 @@ hl.bind(mainMod .. " + CTRL + n", hl.dsp.window.move({ direction = "r" }))
 -- # move up
 hl.bind(mainMod .. " + CTRL + c", hl.dsp.window.move({ direction = "u" }))
 -- # move down
-hl.bind(mainMod .. " + CTRL + t", hl.dsp.window.move({ direction = "d" }))
+hl.bind(mainMod .. " + CTRL + e", hl.dsp.window.move({ direction = "d" }))
 
 -- # focus left
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
@@ -193,7 +193,7 @@ hl.bind(mainMod .. " + n", hl.dsp.focus({ direction = "right" }))
 -- # focus up
 hl.bind(mainMod .. " + c", hl.dsp.focus({ direction = "up" }))
 -- # focus down
-hl.bind(mainMod .. " + t", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + e", hl.dsp.focus({ direction = "down" }))
 
 -- ## Workspace Keybinds
 for i = 1, 10 do
