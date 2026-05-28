@@ -45,6 +45,10 @@
         &:not(:checked) {
           background-color: transparent;
         }
+        &:focus-visible {
+          outline: 2px solid rgba($color4, 0.5);
+          outline-offset: -2px;
+        }
       }
 
       @keyframes go-up {

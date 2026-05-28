@@ -114,5 +114,10 @@ if [[ -f "${SCRIPTS_DIR}/gtk-theme.py" ]]; then
     python3 "${SCRIPTS_DIR}/gtk-theme.py" &
 fi
 
+if [[ -f "${SCRIPTS_DIR}/zen-theme.sh" ]]; then
+    echo "Running Zen Browser theme synchronization..."
+    bash "${SCRIPTS_DIR}/zen-theme.sh" &
+fi
+
 # Update pywalfox if available
 # command -v pywalfox &>/dev/null && pywalfox update 2>/dev/null || true

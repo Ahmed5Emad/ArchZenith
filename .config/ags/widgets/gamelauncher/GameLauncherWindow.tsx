@@ -3,9 +3,7 @@ import app from "ags/gtk4/app";
 import { Astal, Gtk, Gdk } from "ags/gtk4";
 import Pango from "gi://Pango";
 import GLib from "gi://GLib";
-import Picture from "../Picture";
 
-import { globalMargin } from "../../variables";
 import { getMonitorName } from "../../utils/monitor";
 import { games, loading, refreshGames, GameEntry } from "./GameLauncher";
 
@@ -23,23 +21,18 @@ export default ({
   let entryWidget: Gtk.TextView | null = null;
   let listContainer: Gtk.Box | null = null;
   let scrollWin: Gtk.ScrolledWindow | null = null;
+  let panelContainer: Gtk.Box | null = null;
 
   function scrollToSelected() {
     const idx = selectedIndex.get();
-    const container = listContainer;
-    if (!container) return;
-    let sw = container.get_parent();
-    while (sw && !(sw instanceof Gtk.ScrolledWindow)) {
-      sw = sw.get_parent();
-    }
+    const sw = scrollWin;
     if (!sw) return;
     const adj = sw.get_vadjustment();
     if (!adj) return;
-    const itemTop = idx * 80;
-    const itemBottom = itemTop + 80;
+    const itemTop = idx * 105;
     const viewTop = adj.get_value();
     const viewBottom = viewTop + adj.get_page_size();
-    if (itemBottom > viewBottom || itemTop < viewTop) {
+    if (itemTop < viewTop || itemTop + 105 > viewBottom) {
       GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
         adj.set_value(Math.max(0, itemTop - adj.get_page_size() / 3));
         return GLib.SOURCE_REMOVE;
@@ -59,19 +52,26 @@ export default ({
     if (parentWindowRef) parentWindowRef.hide();
     setSearchText("");
     setSelectedIndex(0);
+    setFiltered([]);
   }
 
+  const monitorName = getMonitorName(monitor);
+
   return (
-    <Astal.Window
+    <window
       gdkmonitor={monitor}
-      name={`game-launcher-${getMonitorName(monitor)}`}
+      name={`game-launcher-${monitorName}`}
       namespace="game-launcher"
       application={app}
       keymode={Astal.Keymode.EXCLUSIVE}
       layer={Astal.Layer.TOP}
-      margin={globalMargin}
+      marginTop={5}
+      marginBottom={5}
+      marginLeft={5}
       visible={false}
-      anchor={Astal.WindowAnchor.TOP}
+      anchor={Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM}
+      exclusivity={Astal.Exclusivity.EXCLUSIVE}
+      class="game-launcher-panel"
       $={(self) => {
         parentWindowRef = self;
         setup(self);
@@ -87,88 +87,176 @@ export default ({
           }
         });
       }}
-      resizable={false}
     >
-      <Gtk.EventControllerKey
-        onKeyPressed={({ widget }, keyval: number) => {
-          if (keyval === Gdk.KEY_Escape) { widget.hide(); return true; }
+      <Gtk.GestureClick
+        onPressed={(_, _nPress, x: number, y: number) => {
+          if (!parentWindowRef || !panelContainer) return;
+          const picked = parentWindowRef.pick(x, y, Gtk.PickFlags.DEFAULT);
+          let current = picked;
+          while (current) {
+            if (current === panelContainer) {
+              return;
+            }
+            current = current.get_parent();
+          }
+          parentWindowRef.hide();
+          setSearchText("");
+          setSelectedIndex(0);
+          setFiltered([]);
         }}
       />
-      <box class="game-launcher" orientation={Gtk.Orientation.VERTICAL} spacing={0} widthRequest={600}>
-        <box class="game-launcher-header" spacing={10}>
+
+      <Gtk.EventControllerKey
+        onKeyPressed={({ widget }, keyval: number) => {
+          if (keyval === Gdk.KEY_Escape) {
+            parentWindowRef?.hide();
+            return true;
+          }
+        }}
+      />
+
+      <box
+        class="game-launcher-panel-content"
+        orientation={Gtk.Orientation.VERTICAL}
+        spacing={0}
+        widthRequest={500}
+        $={(self) => { panelContainer = self; }}
+      >
+        <box class="game-launcher-panel-header" spacing={10}>
           <image iconName="applications-games" />
           <label label="Game Launcher" hexpand xalign={0} />
-          <label label={loading((l) => (l ? "Scanning..." : ""))} class="game-launcher-status" />
+          <label
+            label={loading((l) => (l ? "Scanning..." : ""))}
+            class="game-launcher-panel-status"
+          />
+          <button
+            onClicked={() => refreshGames().then(() => filterGames(searchText.get())).catch(() => {})}
+            tooltipText="Refresh games"
+          >
+            <label label="↻" />
+          </button>
         </box>
 
-        <Gtk.TextView hexpand
-          wrapMode={Gtk.WrapMode.WORD_CHAR}
-          topMargin={8} bottomMargin={8} leftMargin={10} rightMargin={10}
-          $={(self) => {
-            entryWidget = self;
-            self.buffer.connect("changed", () => {
-              const text = self.buffer.text; setSearchText(text); filterGames(text); setSelectedIndex(0);
-            });
-          }}>
-          <Gtk.EventControllerKey
-            onKeyPressed={(_, keyval: number, _keycode: number, state: number) => {
-              const count = filtered.get().length;
-              if (keyval === Gdk.KEY_Down && count > 0) {
-                setSelectedIndex((selectedIndex.get() + 1) % count);
-                scrollToSelected();
-                return true;
-              }
-              if (keyval === Gdk.KEY_Up && count > 0) {
-                setSelectedIndex((selectedIndex.get() - 1 + count) % count);
-                scrollToSelected();
-                return true;
-              }
-              const isEnter = keyval === Gdk.KEY_Return || keyval === Gdk.KEY_KP_Enter;
-              if (!isEnter) return false;
-              const isShift = (state & Gdk.ModifierType.SHIFT_MASK) !== 0;
-              if (isShift) return false;
-              if (count > 0) {
-                const idx = selectedIndex.get();
-                if (idx >= 0 && idx < count) launchGame(filtered.get()[idx]);
-              }
-              return true;
+        <box class="game-launcher-panel-search">
+          <Gtk.TextView
+            hexpand
+            wrapMode={Gtk.WrapMode.WORD_CHAR}
+            topMargin={8}
+            bottomMargin={8}
+            leftMargin={10}
+            rightMargin={10}
+            tooltipMarkup={"Search games\n<b>Enter</b> launch selected\n<b>Shift+Enter</b> new line"}
+            $={(self) => {
+              entryWidget = self;
+              self.buffer.connect("changed", () => {
+                const text = self.buffer.text;
+                setSearchText(text);
+                filterGames(text);
+                setSelectedIndex(0);
+              });
             }}
-          />
-        </Gtk.TextView>
+          >
+            <Gtk.EventControllerKey
+              onKeyPressed={(_, keyval: number, _keycode: number, state: number) => {
+                const count = filtered.get().length;
+                if (keyval === Gdk.KEY_Down && count > 0) {
+                  setSelectedIndex((selectedIndex.get() + 1) % count);
+                  scrollToSelected();
+                  return true;
+                }
+                if (keyval === Gdk.KEY_Up && count > 0) {
+                  setSelectedIndex((selectedIndex.get() - 1 + count) % count);
+                  scrollToSelected();
+                  return true;
+                }
+                const isEnter = keyval === Gdk.KEY_Return || keyval === Gdk.KEY_KP_Enter;
+                if (!isEnter) return false;
+                const isShift = (state & Gdk.ModifierType.SHIFT_MASK) !== 0;
+                if (isShift) return false;
+                if (count > 0) {
+                  const idx = selectedIndex.get();
+                  if (idx >= 0 && idx < count) launchGame(filtered.get()[idx]);
+                }
+                return true;
+              }}
+            />
+          </Gtk.TextView>
+        </box>
 
         <scrolledwindow vexpand $={(self) => { scrollWin = self; }}>
-          <box orientation={Gtk.Orientation.VERTICAL} spacing={5} marginTop={5} marginBottom={10} marginStart={10} marginEnd={10}
-            $={(self) => { listContainer = self; }}>
+          <box
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={5}
+            marginTop={5}
+            marginBottom={10}
+            marginStart={10}
+            marginEnd={10}
+            $={(self) => { listContainer = self; }}
+          >
             <For each={filtered}>
               {(game: GameEntry, index: number) => (
-                <Gtk.Button hexpand
-                  class={createComputed(() => selectedIndex() === index() ? "game-launcher-item checked" : "game-launcher-item")}
-                  onClicked={() => launchGame(game)}>
+                <button
+                  hexpand
+                  class={createComputed(() =>
+                    selectedIndex() === index()
+                      ? "game-launcher-panel-item checked"
+                      : "game-launcher-panel-item"
+                  )}
+                  onClicked={() => launchGame(game)}
+                >
                   <box spacing={10}>
-                    <box class="game-launcher-cover">
-                      <Picture file={game.cover} width={60} height={85}
-                        contentFit={Gtk.ContentFit.COVER} visible={!!game.cover} />
-                      <image hexpand vexpand iconName="applications-games" pixelSize={40}
-                        visible={!game.cover} />
+                    <box
+                      class="game-launcher-panel-cover"
+                      css={
+                        game.cover
+                          ? `background-image: url('file://${game.cover}'); background-size: cover; background-position: center;`
+                          : ""
+                      }
+                      widthRequest={60}
+                      heightRequest={85}
+                    >
+                      {!game.cover && (
+                        <image hexpand vexpand iconName="applications-games" pixelSize={40} />
+                      )}
                     </box>
-                    <box orientation={Gtk.Orientation.VERTICAL} spacing={3}
-                      valign={Gtk.Align.CENTER} hexpand>
-                      <label label={game.name} ellipsize={Pango.EllipsizeMode.END}
-                        hexpand xalign={0} wrap={false} />
-                      <label label={game.runner} class="game-launcher-runner" xalign={0} hexpand />
+                    <box
+                      orientation={Gtk.Orientation.VERTICAL}
+                      spacing={3}
+                      valign={Gtk.Align.CENTER}
+                      hexpand
+                    >
+                      <label
+                        label={game.name}
+                        ellipsize={Pango.EllipsizeMode.END}
+                        hexpand
+                        xalign={0}
+                        wrap={false}
+                      />
+                      <label
+                        label={game.runner}
+                        class="game-launcher-panel-runner"
+                        xalign={0}
+                        hexpand
+                      />
                     </box>
                   </box>
-                </Gtk.Button>
+                </button>
               )}
             </For>
-            <box valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}
-              visible={filtered((f: GameEntry[]) => f.length === 0)} marginTop={40}>
-              <label label={loading((l) => l ? "Searching for games..." : "No games found.")}
-                class="game-launcher-empty" />
+            <box
+              valign={Gtk.Align.CENTER}
+              halign={Gtk.Align.CENTER}
+              visible={filtered((f: GameEntry[]) => f.length === 0)}
+              marginTop={40}
+            >
+              <label
+                label={loading((l) => (l ? "Searching for games..." : "No games found."))}
+                class="game-launcher-panel-empty"
+              />
             </box>
           </box>
         </scrolledwindow>
       </box>
-    </Astal.Window>
+    </window>
   );
 };

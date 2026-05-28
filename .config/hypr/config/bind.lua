@@ -175,7 +175,7 @@ hl.bind(mainMod .. " + CTRL + n", hl.dsp.window.move({ direction = "r" }))
 -- # move up
 hl.bind(mainMod .. " + CTRL + c", hl.dsp.window.move({ direction = "u" }))
 -- # move down
-hl.bind(mainMod .. " + CTRL + e", hl.dsp.window.move({ direction = "d" }))
+hl.bind(mainMod .. " + CTRL + u", hl.dsp.window.move({ direction = "d" }))
 
 -- # focus left
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
@@ -193,7 +193,7 @@ hl.bind(mainMod .. " + n", hl.dsp.focus({ direction = "right" }))
 -- # focus up
 hl.bind(mainMod .. " + c", hl.dsp.focus({ direction = "up" }))
 -- # focus down
-hl.bind(mainMod .. " + e", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + u", hl.dsp.focus({ direction = "down" }))
 
 -- ## Workspace Keybinds
 for i = 1, 10 do

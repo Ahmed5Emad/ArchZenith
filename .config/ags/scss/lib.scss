@@ -139,12 +139,39 @@ switch {
   }
 
   &:checked {
-    background-color: $foreground-secondary;
+    background-color: rgba($color4, 0.6);
   }
 
   &:checked slider {
     background-color: white;
   }
+}
+
+checkbutton, radiobutton {
+  background: transparent;
+}
+check, radio {
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 4px;
+  border: 1px solid $tertiary;
+  background-color: $background;
+}
+check:checked {
+  background-color: $color4;
+  border-color: $color4;
+  color: $foreground;
+}
+radio:checked {
+  background-color: $color4;
+  border-color: $color4;
+}
+
+button:focus-visible,
+checkbutton:focus-visible,
+switch:focus-visible {
+  outline: 2px solid rgba($color4, 0.5);
+  outline-offset: -2px;
 }
 
 scale {

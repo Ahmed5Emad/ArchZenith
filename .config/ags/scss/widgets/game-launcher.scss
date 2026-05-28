@@ -1,74 +1,57 @@
-.game-launcher {
-  min-height: 400px;
-  min-width: 500px;
-  background: $background-semi-transparent;
-  border-radius: 14px;
-
-  .game-launcher-header {
-    @include module;
-    margin: 10px;
-  }
-
-  .game-launcher-status {
-    color: $foreground-tertiary;
-    font-size: 0.9em;
-  }
-
-  > scrollable {
-    > * {
-      padding: 0 10px;
-    }
-  }
-
-    .game-launcher-item {
-      @include module;
-      background: $background-semi-transparent;
-      padding: 5px;
-      margin: 2px 0;
-
-      &.checked {
-        background: $color2;
-        color: $background;
-      }
-
-    .game-launcher-cover {
-      border-radius: 10px;
-      background: $background-secondary;
-      overflow: hidden;
-    }
-
-    .game-launcher-runner {
-      color: $foreground-tertiary;
-      font-size: 0.8em;
-    }
-  }
-
-  .game-launcher-empty {
-    color: $foreground-tertiary;
-    font-size: 1.1em;
-  }
-}
-
 .game-launcher-panel {
+  .game-launcher-panel-content {
+    @include module;
+    padding: 0;
+  }
+
   .game-launcher-panel-header {
     @include module;
     margin: 5px;
+
+    .game-launcher-panel-status {
+      color: $foreground-tertiary;
+      font-size: 0.9em;
+    }
+
+    button {
+      min-width: 30px;
+      min-height: 30px;
+      padding: 0;
+    }
+  }
+
+  .game-launcher-panel-search {
+    @include module;
+    margin: 0 5px 5px 5px;
   }
 
   .game-launcher-panel-item {
     @include module;
-    padding: 4px;
+    padding: 5px;
     margin: 2px 5px;
+    background: transparent;
+
+    &:hover {
+      background: $background;
+    }
+
+    &.checked {
+      background: $color2;
+      color: $background;
+    }
 
     .game-launcher-panel-cover {
       border-radius: 10px;
       background: $background-secondary;
       overflow: hidden;
+      min-width: 60px;
+      min-height: 85px;
     }
 
     .game-launcher-panel-runner {
       color: $foreground-tertiary;
-      font-size: 0.8em;
+      font-size: 0.9em;
+      opacity: 0.8;
     }
   }
 

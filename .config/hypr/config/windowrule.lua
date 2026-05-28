@@ -64,6 +64,20 @@ hl.window_rule({
 })
 
 hl.window_rule({
+    match = { class = "^(xdg-desktop-portal-gtk)$" },
+    float = true,
+    size = "800 600",
+    center = true,
+})
+
+hl.window_rule({
+    match = { class = "^(zen|firefox|librewolf|thorium|chromium|google-chrome|brave-browser|vivaldi)$", title = "^Library$" },
+    float = true,
+    size = "800 600",
+    center = true,
+})
+
+hl.window_rule({
     match = { class = "^(Spotify)$" },
     workspace = "4 silent",
 })
