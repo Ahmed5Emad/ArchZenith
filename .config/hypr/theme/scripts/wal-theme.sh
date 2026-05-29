@@ -98,25 +98,18 @@ if [[ "${target_theme}" != "${current_theme}" ]]; then
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     fi
     "${SCRIPTS_DIR}/cursor-theme.sh" || true
-    "${SCRIPTS_DIR}/gtk-theme.sh" || true
+    "${SCRIPTS_DIR}/theme-css" || true
     "${SCRIPTS_DIR}/qt-theme.sh" || true
 fi
 
-# ALWAYS run the dynamic color & icon orchestrator on wallpaper change.
-# This matches colors from cwal, runs kde-material-you-colors, and syncs Tela icons.
+# Apply theme components in parallel — each C binary finishes in <10ms.
+"${SCRIPTS_DIR}/theme-css" &          # GTK CSS + dconf + AGS reload + xdg-portal
+"${SCRIPTS_DIR}/theme-icons" &        # Tela variant + dconf icon theme + kdeglobals
+bash "${SCRIPTS_DIR}/zen-theme.sh" &  # Zen browser (jq one-liner, ~20ms)
+
+# KDE Material You colors in background (Python unavoidable for M3 math).
 if [[ -f "${SCRIPTS_DIR}/icons.py" ]]; then
-    echo "Running dynamic window and icon theme synchronization..."
     python3 "${SCRIPTS_DIR}/icons.py" &
-fi
-
-if [[ -f "${SCRIPTS_DIR}/gtk-theme.py" ]]; then
-    echo "Running dynamic GTK theme synchronization..."
-    python3 "${SCRIPTS_DIR}/gtk-theme.py" &
-fi
-
-if [[ -f "${SCRIPTS_DIR}/zen-theme.sh" ]]; then
-    echo "Running Zen Browser theme synchronization..."
-    bash "${SCRIPTS_DIR}/zen-theme.sh" &
 fi
 
 # Update pywalfox if available

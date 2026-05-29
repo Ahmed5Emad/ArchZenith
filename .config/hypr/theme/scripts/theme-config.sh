@@ -71,33 +71,23 @@ detect_color_variant() {
 }
 
 # Detect variant directly from wallpaper average RGB value.
-# Uses ImageMagick to sample a 1x1 average color and classify it.
+# Uses ffmpeg to sample a 1x1 average pixel (faster than ImageMagick).
 detect_variant_from_wallpaper() {
     local wallpaper="$1"
-    local rgb
-    local r
-    local g
-    local b
-    local brightness
 
     if [[ ! -f "$wallpaper" ]]; then
         echo "dark"
         return
     fi
 
-    if ! command -v magick >/dev/null 2>&1; then
+    if ! command -v ffmpeg >/dev/null 2>&1; then
         echo "dark"
         return
     fi
 
-    rgb=$(magick "$wallpaper" -resize 1x1\! -format "%[fx:int(255*r)],%[fx:int(255*g)],%[fx:int(255*b)]" info: 2>/dev/null || true)
-    if [[ -z "$rgb" || "$rgb" != *,*,* ]]; then
-        echo "dark"
-        return
-    fi
-
-    IFS=',' read -r r g b <<< "$rgb"
-    brightness=$(( (r * 299 + g * 587 + b * 114) / 1000 ))
+    set -- $(ffmpeg -i "$wallpaper" -vframes 1 -vf "scale=1:1" -f rawvideo -pix_fmt rgb24 - 2>/dev/null | od -An -tu1 | head -1)
+    local r=${1:-0} g=${2:-0} b=${3:-0}
+    local brightness=$(( (r * 299 + g * 587 + b * 114) / 1000 ))
 
     if [[ $brightness -gt 128 ]]; then
         echo "light"

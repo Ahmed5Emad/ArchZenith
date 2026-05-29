@@ -31,7 +31,13 @@ export function refreshCss() {
         ' | cat - ${defaultColors} \
         $([ -f ${walScssColors} ] && echo ${walScssColors}) \
         $([ -f ${walCssColors} ] && echo ${walCssColors}) \
-        ${scss} > ${tmpScss} && sass ${tmpScss} ${tmpCss} -I ${scss_dir}"`);
+        ${scss} > ${tmpScss} \
+        && sass --style=compressed \\
+               --silence-deprecation=import \\
+               --silence-deprecation=global-builtin \\
+               --silence-deprecation=function-units \\
+               --silence-deprecation=slash-div \\
+               ${tmpScss} ${tmpCss} -I ${scss_dir}"`);
 
   App.reset_css();
   App.apply_css(tmpCss);

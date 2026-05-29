@@ -1,6 +1,6 @@
 // Define the theme variables
 
-@mixin module {
+.module-base {
   background: $background-transparent;
   color: $foreground;
 
@@ -22,6 +22,10 @@
   & {
     transition: background 0.2s, color 0.2s, transform 0.2s, opacity 0.2s;
   }
+}
+
+@mixin module {
+  @extend .module-base;
 }
 
 @mixin button-checked {

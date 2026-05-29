@@ -26,13 +26,4 @@ fi
 chrome_dir="${profile_path}/chrome"
 mkdir -p "$chrome_dir"
 
-python3 -c "
-import json, sys
-with open('${COLORS_JSON}') as f:
-    d = json.load(f)
-sys.stdout.write(json.dumps({
-    'background': d['special']['background'],
-    'foreground': d['special']['foreground'],
-    'accent': d['colors'].get('color4', d['colors'].get('color3', '#499646'))
-}))
-" > "${chrome_dir}/current-theme.json"
+jq '{background: .special.background, foreground: .special.foreground, accent: (.colors.color4 // .colors.color3 // "#499646")}' "$COLORS_JSON" > "${chrome_dir}/current-theme.json"

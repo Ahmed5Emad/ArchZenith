@@ -37,10 +37,10 @@ apply_theme_components() {
     # Apply all theme components in parallel for faster execution
     {
         "${SCRIPTS_DIR}/cursor-theme.sh" &
-        "${SCRIPTS_DIR}/gtk-theme.sh" &
+        "${SCRIPTS_DIR}/theme-css" &
         "${SCRIPTS_DIR}/wal-theme.sh" &
         "${SCRIPTS_DIR}/qt-theme.sh" &
-        "${SCRIPTS_DIR}/icon-theme.sh" &
+        "${SCRIPTS_DIR}/theme-icons" &
         wait
     } 2>/dev/null
     
@@ -91,7 +91,7 @@ switch_theme() {
     
     # Send notification if notify-send is available
     if command -v notify-send &>/dev/null; then
-        sleep 1 && notify-send -u normal "Theme Changed" "Current theme: ${target_theme^}"
+        notify-send -u normal "Theme Changed" "Current theme: ${target_theme^}"
     fi
 }
 
