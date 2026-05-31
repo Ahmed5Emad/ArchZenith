@@ -250,6 +250,32 @@ fi
 
 
 
+# Deploy ALSA mic fix only on systems with a built-in/internal microphone
+print_header "ALSA Mic Fix"
+HAS_MIC=false
+if command -v arecord &>/dev/null; then
+    CAPTURE_DEVICES=$(arecord -l 2>/dev/null | grep -i "card")
+    if [ -n "$CAPTURE_DEVICES" ]; then
+        HAS_MIC=true
+    fi
+fi
+if [ "$HAS_MIC" = false ] && command -v amixer &>/dev/null; then
+    amixer scontrols 2>/dev/null | grep -qiE "mic|capture" && HAS_MIC=true
+fi
+
+if [ "$HAS_MIC" = true ]; then
+    print_success "Detected a microphone — deploying ALSA mic fix"
+    if [ -f "$SCRIPT_DIR/etc/sudoers.d/alsa-mic-fix" ]; then
+        install -m 440 -o root -g root "$SCRIPT_DIR/etc/sudoers.d/alsa-mic-fix" /etc/sudoers.d/alsa-mic-fix 2>/dev/null && \
+            print_success "Deployed sudoers rule for alsactl store" || \
+            print_warning "Could not deploy sudoers rule (run manually: sudo install -m 440 etc/sudoers.d/alsa-mic-fix /etc/sudoers.d/)"
+    else
+        print_warning "sudoers rule file not found at etc/sudoers.d/alsa-mic-fix"
+    fi
+else
+    print_warning "No built-in microphone detected — skipping ALSA mic fix"
+fi
+
 # Finalizing Installation
 print_banner
 echo -e "${GREEN}${BOLD}🎉 Installation Complete!${NC}"

@@ -1,0 +1,2 @@
+# Allow alsactl store without password for mic fix script on login
+alex ALL=(root) NOPASSWD: /usr/bin/alsactl store

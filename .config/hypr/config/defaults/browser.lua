@@ -48,8 +48,4 @@ end
 
 local browser = get_native_browser()
 
-hl.on("hyprland.start", function()
-    hl.exec_cmd(browser)
-end)
-
 return browser
